@@ -14,7 +14,6 @@
     <link rel="shortcut icon" type="image/jpeg" href="https://github.com/Rxz60/SAC/raw/refs/heads/main/IMG_5068.jpeg">
     <link rel="apple-touch-icon" href="https://github.com/Rxz60/SAC/raw/refs/heads/main/IMG_5068.jpeg">
 
-
     <link rel="preload" as="audio" href="https://github.com/Rxz60/SAP/raw/refs/heads/main/ScreenRecording_%D9%A0%D9%A9-%D9%A0%D9%A5-%D9%A2%D9%A0%D9%A2%D9%A6-%D9%A1%D9%A8-%D9%A1%D9%A2-%D9%A1%D9%A8_2.m4a">
 
     <style>
@@ -44,7 +43,8 @@
 
         body {
             background-color: var(--bg-dark);
-            background-image: url("https://github.com/Rxz60/SAC/raw/refs/heads/main/IMG_5144.jpeg");
+            /* الخلفية الجديدة المطلوبة */
+            background-image: url("https://github.com/Rxz60/SAP/raw/refs/heads/main/IMG_5165.jpeg");
             background-position: center;
             background-repeat: no-repeat;
             background-size: cover;
@@ -52,6 +52,37 @@
             color: var(--text-color); margin: 0; padding: 0; min-height: 100vh; overflow-x: hidden;
             position: relative;
             perspective: 2000px;
+        }
+
+        
+        .rotating-bg-overlay {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: min(80vw, 500px);
+            height: min(80vw, 500px);
+            transform: translate(-50%, -50%);
+            z-index: 1;
+            pointer-events: none;
+            opacity: 0.6;
+            animation: rotateContinuous 12s linear infinite;
+        }
+
+        .rotating-bg-overlay img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 50%;
+            filter: drop-shadow(0 0 25px rgba(255, 255, 255, 0.4));
+        }
+
+        @keyframes rotateContinuous {
+            from {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+            to {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
         }
 
         .splash-screen {
@@ -509,9 +540,48 @@
         .drawer-item:hover .discord-icon-img {
             fill: #000000;
         }
+
+
+        .audio-control-btn {
+            position: fixed;
+            bottom: 25px;
+            left: 25px;
+            z-index: 2000005;
+            background: #000000;
+            border: 2px solid #ffffff;
+            color: #ffffff;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 0 15px var(--white-glow);
+            transition: 0.3s ease;
+            font-size: 18px;
+        }
+        .audio-control-btn:hover {
+            background: #ffffff;
+            color: #000000;
+            box-shadow: 0 0 25px #ffffff;
+        }
     </style>
 </head>
 <body>
+
+
+<audio id="bgAudio" loop preload="auto">
+    <source src="https://github.com/Rxz60/SAP/raw/refs/heads/main/ScreenRecording_%D9%A0%D9%A9-%D9%A0%D9%A5-%D9%A2%D9%A0%D9%A2%D9%A6-%D9%A1%D9%A8-%D9%A1%D9%A2-%D9%A1%D9%A8_2.m4a" type="audio/mp4">
+</audio>
+
+
+<button class="audio-control-btn" id="audioToggleBtn" onclick="toggleAudio()" title="تشغيل / إيقاف الصوت">🔊</button>
+
+
+<div class="rotating-bg-overlay">
+    <img src="https://github.com/Rxz60/SAP/raw/refs/heads/main/IMG_5163.jpeg" alt="Rotating Background Element">
+</div>
 
 <div id="splashScreen" class="splash-screen">
     <div class="rights-text">الحقوق كاملة تعود لـ سيرفر SAP</div>
@@ -734,7 +804,6 @@
     </div>
 </div>
 
-
 <div id="side-drawer" class="side-drawer-overlay" onclick="if(event.target.id==='side-drawer') { playInstantActionSound(); this.classList.remove('open'); }">
     <div class="side-drawer-container">
         <button class="drawer-close-btn" onclick="playInstantActionSound(); document.getElementById('side-drawer').classList.remove('open')">✕</button>
@@ -763,18 +832,44 @@
     document.addEventListener('dragstart', e => e.preventDefault());
     document.addEventListener('drop', e => e.preventDefault());
 
+    const audio = document.getElementById('bgAudio');
+    const audioBtn = document.getElementById('audioToggleBtn');
+    let hasPlayed = false;
+
  
-    const clickSound = new Audio("https://github.com/Rxz60/SAP/raw/refs/heads/main/ScreenRecording_%D9%A0%D9%A9-%D9%A0%D9%A5-%D9%A2%D9%A0%D9%A2%D9%A6-%D9%A1%D9%A8-%D9%A1%D9%A2-%D9%A1%D9%A8_2.m4a");
-    clickSound.preload = "auto";
+    function startAudioOnInteraction() {
+        if (!hasPlayed) {
+            audio.play().then(() => {
+                hasPlayed = true;
+                audioBtn.textContent = '🔊';
+            }).catch(() => {});
+        }
+    }
+
+    document.addEventListener('click', startAudioOnInteraction, { once: false });
+    document.addEventListener('touchstart', startAudioOnInteraction, { once: false });
+
+    function toggleAudio() {
+        if (audio.paused) {
+            audio.play();
+            audioBtn.textContent = '🔊';
+        } else {
+            audio.pause();
+            audioBtn.textContent = '🔇';
+        }
+    }
 
     function playInstantActionSound() {
-
-        clickSound.currentTime = 0;
-        clickSound.play().catch(() => {});
+        if (audio.paused) {
+            audio.play().catch(() => {});
+        } else {
+            
+            audio.currentTime = audio.currentTime;
+        }
     }
 
     function enterSiteProcess() {
-        playInstantActionSound();
+        startAudioOnInteraction();
         const splash = document.getElementById('splashScreen');
         const skipBtn = document.getElementById('skipSplashBtn');
         const mainWrapper = document.getElementById('mainContentWrapper');
