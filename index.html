@@ -5,16 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SAP</title>
 
-
     <meta property="og:title" content="SAP">
     <meta property="og:description" content="موقع SAP + موثوق">
     <meta property="og:image" content="https://github.com/Rxz60/SAC/raw/refs/heads/main/IMG_5068.jpeg">
     <meta property="og:type" content="website">
 
-
     <link rel="icon" type="image/jpeg" href="https://github.com/Rxz60/SAC/raw/refs/heads/main/IMG_5068.jpeg">
     <link rel="shortcut icon" type="image/jpeg" href="https://github.com/Rxz60/SAC/raw/refs/heads/main/IMG_5068.jpeg">
     <link rel="apple-touch-icon" href="https://github.com/Rxz60/SAC/raw/refs/heads/main/IMG_5068.jpeg">
+
+
+    <link rel="preload" as="audio" href="https://github.com/Rxz60/SAC/raw/refs/heads/main/ScreenRecording_%D9%A0%D9%A9-%D9%A0%D9%A5-%D9%A2%D9%A0%D9%A2%D9%A6-%D9%A1%D9%A8-%D9%A1%D9%A2-%D9%A1%D9%A8_1.m4a">
 
     <style>
         :root {
@@ -510,8 +511,7 @@
         }
     </style>
 </head>
-<body onclick="initAudioContext()">
-
+<body>
 
 <div id="splashScreen" class="splash-screen">
     <div class="rights-text">الحقوق كاملة تعود لـ سيرفر SAP</div>
@@ -521,12 +521,10 @@
     <div class="splash-buttons-container">
         <button class="enter-btn-box" onclick="enterSiteProcess()">اضغط للبدء</button>
         
-
         <a href="https://drb7hs.github.io/.SAP./SAP.mobileconfig" target="_blank" onclick="playInstantActionSound();" class="custom-style-btn">
             <img src="https://github.com/Rxz60/SAC/raw/refs/heads/main/IMG_5068.jpeg" class="small-circle-icon" alt="Icon">
             <span>تحميل الموقع</span>
         </a>
-
 
         <a href="https://discord.gg/UQRP3QZ4W" target="_blank" onclick="playInstantActionSound();" class="custom-style-btn">
             <svg class="discord-icon-img" viewBox="0 0 127.14 96.36">
@@ -736,7 +734,7 @@
     </div>
 </div>
 
-<!-- القائمة الجانبية -->
+
 <div id="side-drawer" class="side-drawer-overlay" onclick="if(event.target.id==='side-drawer') { playInstantActionSound(); this.classList.remove('open'); }">
     <div class="side-drawer-container">
         <button class="drawer-close-btn" onclick="playInstantActionSound(); document.getElementById('side-drawer').classList.remove('open')">✕</button>
@@ -765,31 +763,14 @@
     document.addEventListener('dragstart', e => e.preventDefault());
     document.addEventListener('drop', e => e.preventDefault());
 
-    let audioCtx = null;
-    function initAudioContext() {
-        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        if (audioCtx.state === 'suspended') audioCtx.resume();
-    }
+ 
+    const clickSound = new Audio("https://github.com/Rxz60/SAC/raw/refs/heads/main/ScreenRecording_%D9%A0%D9%A9-%D9%A0%D9%A5-%D9%A2%D9%A0%D9%A2%D9%A6-%D9%A1%D9%A8-%D9%A1%D9%A2-%D9%A1%D9%A8_1.m4a");
+    clickSound.preload = "auto";
 
     function playInstantActionSound() {
-        initAudioContext();
-        if(!audioCtx) return;
 
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(600, audioCtx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.08);
-
-        gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
-
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-
-        osc.start();
-        osc.stop(audioCtx.currentTime + 0.08);
+        clickSound.currentTime = 0;
+        clickSound.play().catch(() => {});
     }
 
     function enterSiteProcess() {
